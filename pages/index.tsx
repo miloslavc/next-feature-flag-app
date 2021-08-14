@@ -3,19 +3,19 @@ import Head from 'next/head';
 
 const Home: NextPage = () => {
   return (
-    <div className="">
+    <>
       <Head>
         <title>Feature Flag App</title>
         <meta name="description" content="Feature Flag App" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className="">
-        <h1 className="">Feature Flag App</h1>
+      <main>
+        <div className="p-4">
+          <h1 className="text-xl font-bold">Feature Flag App</h1>
+        </div>
       </main>
-
-      <footer></footer>
-    </div>
+    </>
   );
 };
 
