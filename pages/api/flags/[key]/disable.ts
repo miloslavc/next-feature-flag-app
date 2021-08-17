@@ -1,9 +1,9 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { disableFlag, checkAll } from '@/utils/flags';
+import { disableFlag, checkOne } from '@/utils/flags';
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const key = req.query.key as string;
   await disableFlag(key);
-  const flags = await checkAll();
+  const flags = await checkOne(key);
   res.status(200).json(flags);
 };

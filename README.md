@@ -1,4 +1,12 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Next Feature Flags API
+
+This package uses [upstash](https://upstash.com/), a key-value store for storage, and [ioredis](https://github.com/luin/ioredis) as nodejs redis client. The internal api request are done by [swr](https://swr.vercel.app/).
+
+## What are feature flags?
+
+Feature flags let you enable or disable some api/flags of your application. It allows teams to modify system behavior without changing code.
+
+If you want to learn more about feature flags, check out [this article](http://martinfowler.com/articles/feature-toggles.html).
 
 ## Getting Started
 
@@ -10,25 +18,92 @@ npm run dev
 yarn dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the feature flag landing page.
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+## Usage
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+Feature flags can be added via [http://localhost:3000](http://localhost:3000) or directly using provided endpoints.
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+## Authentication
 
-## Learn More
+This API does not ship with an authentication layer. You **should not** expose the API to the Internet. This API should be deployed behind a firewall, only your application servers should be allowed to send requests to the API.
 
-To learn more about Next.js, take a look at the following resources:
+### API Documentation
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+#### `/api/flags`
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+Get a list of available feature flags.
 
-## Deploy on Vercel
+- Endpoint: `/api/flags`
+- Responses:
+  - 200 OK
+  ```json
+  [
+    {
+      "FEATURE_FLAG_ONE": false
+    },
+    {
+      "FEATURE_FLAG_TWO": true
+    }
+  ]
+  ```
+  - `key` is the name of the feature flag
+  - `enabled`: tell if the feature flag is enabled. If `true`, everybody has access to the feature flag.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+#### `/api/flags/:flagName/enable`
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Create a new feature flag and sets it as `enabled`.
+
+- Endpoint: `/api/flags/:flagName/enable`
+- Input:
+  The `Content-Type` HTTP header should be set to `application/json`
+
+- Responses:
+  - 200 Created
+  ```json
+  {
+    ":flagName": "enabled"
+  }
+  ```
+
+#### `/api/flags/:flagName/check`
+
+Get a specific feature flag.
+
+- Endpoint: `/api/flags/:flagName/check`
+- Responses:
+  - 200 OK
+  ```json
+  {
+    ":flagName": "enabled"
+  }
+  ```
+
+#### `/api/flags/:flagName/remove`
+
+Remove a feature flag.
+
+- Endpoint: `/api/falgs/:flagName/remove`
+- Responses:
+  - 200 OK
+  ```json
+  {
+    "status": "flag_removed"
+  }
+  ```
+
+#### `/api/flags/:flagName/disable`
+
+Update a feature flag.
+
+- Endpoint: `/api/flags/:flagName/disable`
+- Input:
+  The `Content-Type` HTTP header should be set to `application/json`
+
+- Responses:
+  - 200 OK
+  ```json
+  {
+    ":flagName": "enabled"
+  }
+  ```

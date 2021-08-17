@@ -17,7 +17,7 @@ export const removeFlag = async (key: string) => {
 
 export const checkOne = async (key: string) => {
   const value = await redis.get(`flag:${key}`);
-  return value === '1';
+  return { [key]: value === '1' };
 };
 
 export const checkAll = async () => {

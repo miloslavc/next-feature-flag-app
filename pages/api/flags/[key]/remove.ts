@@ -1,9 +1,8 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { removeFlag, checkAll } from '@/utils/flags';
+import { removeFlag } from '@/utils/flags';
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const key = req.query.key as string;
   await removeFlag(key);
-  const flags = await checkAll();
-  res.status(200).json(flags);
+  res.status(200).json({ status: 'flag_removed' });
 };
